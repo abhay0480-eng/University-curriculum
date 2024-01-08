@@ -7,7 +7,7 @@ import { startLoader, stopLoader } from '../store/loader'
 import service from '../appwrite/config'
 import { getProgramList } from '../store/programListSlice'
 
-  const FormInput = ({ addNew, handleClose }) => {
+  const FormInput = ({ addNew, handleClose, notify }) => {
   const dispatch = useDispatch()
   const [error, setError] = useState("")
   const programList = useSelector((state) => state.program.programList);
@@ -67,6 +67,7 @@ const initialFormData = {
         const AddProgramRes = await service.addProgramInfo({ ...formData })
         console.log("AddProgramRes", AddProgramRes)
         if (AddProgramRes) {
+          notify()
           const setProgramList = await service.getProgramList()
           if (setProgramList.documents.length > 0) {
             dispatch(getProgramList(setProgramList))

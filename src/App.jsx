@@ -8,6 +8,9 @@ import FormInput from './components/FormInput';
 import { Delete, Update } from '@mui/icons-material';
 import UpdateProgram from './components/UpdateProgram';
 import { getSaveId } from './store/saveIdSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import CustomCard from './components/CustomCard';
 
 const App = () => {
   const dispatch = useDispatch()
@@ -17,6 +20,10 @@ const App = () => {
   const [open, setOpen] = React.useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
+
+  const notify = () => toast("Program Added Successfully");
+
+
   async function deleteProgram(detailsid){
     try {
       dispatch(startLoader())
@@ -35,34 +42,34 @@ const App = () => {
     }
   }
 
-  const CustomCard = ({ program, semesters, subjects,id}) => (
-    <React.Fragment>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Program
-        </Typography>
-        <Typography variant="h5" component="div">
-          {program}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Semesters
-        </Typography>
-        <Typography variant="body2">
-          {semesters}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Subjects
-        </Typography>
-        <Typography variant="body2">
-          {subjects.join(', ')}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button onClick={()=>deleteProgram(id)}  size="small"><Delete/></Button>
-        <Button onClick={() => { dispatch(getSaveId(id)); handleOpen();  }}  size="small"><Update/></Button>
-      </CardActions>
-    </React.Fragment>
-  );
+  // const CustomCard = ({ program, semesters, subjects,id}) => (
+  //   <React.Fragment>
+  //     <CardContent>
+  //       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+  //         Program
+  //       </Typography>
+  //       <Typography variant="h5" component="div">
+  //         {program}
+  //       </Typography>
+  //       <Typography sx={{ mb: 1.5 }} color="text.secondary">
+  //         Semesters
+  //       </Typography>
+  //       <Typography variant="body2">
+  //         {semesters}
+  //       </Typography>
+  //       <Typography sx={{ mb: 1.5 }} color="text.secondary">
+  //         Subjects
+  //       </Typography>
+  //       <Typography variant="body2">
+  //         {subjects.join(', ')}
+  //       </Typography>
+  //     </CardContent>
+  //     <CardActions>
+  //       <Button onClick={()=>deleteProgram(id)}  size="small"><Delete/></Button>
+  //       <Button onClick={() => { dispatch(getSaveId(id)); handleOpen();  }}  size="small"><Update/></Button>
+  //     </CardActions>
+  //   </React.Fragment>
+  // );
 
   console.log(programList);
 
@@ -71,11 +78,12 @@ const App = () => {
      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+        <ToastContainer />
 
     <UpdateProgram open={open} setOpen={setOpen} handleClose={handleClose} handleOpen={handleOpen}  />
 
     <Paper elevation={3} style={{ padding: '20px', marginTop:'20px' }}>
-    <FormInput addNew={true}/>
+    <FormInput addNew={true} notify={notify}/>
     </Paper>
 
     <Grid container spacing={3} style={{ marginTop: '20px' }}>
@@ -89,6 +97,8 @@ const App = () => {
                 semesters={item.semesters}
                 subjects={item.subjects}
                 id={item.$id}
+                deleteProgram={deleteProgram}
+                handleOpen={handleOpen}
               />}
           </Card>
           </Box>
